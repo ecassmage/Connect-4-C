@@ -1,0 +1,177 @@
+bool make_move(char board[6][7], int column, char player);
+    For this. It will check if the move asked of it to make is a valid move. mainly it will check to see if the column has a '.'
+    located in the columns first row and should it be there it then calls another function to recursively keep going down until
+    it finds the last location not already filled before unwinding it and placing the piece in that location.
+    Will return true if it finds that it can place the piece.
+        See: bool placePiece(char board[6][7], int row, int column, char player); for More on placing each piece.
+
+bool check_win(char board[6][7], char player);
+    This only exists to appease the marks. I do not use it and instead just send it over to another function I already built.
+    This was necessary because I didn't want to write two identical functions. 
+        See: bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]); for more information.
+        
+char first_capital(const char str[], int n, int feature);
+        NOTE: Feature does nothing apart from printing some log(n) information since I wanted to limit it to printing
+            only for the first 6 randomly generated arrays.
+    Searches for the first capital. I have this set up to a string generator which produces the required test cases.
+    This program will find the first capital in generally O(logn) give or take 1 iteration as my program will occasionally 
+    catch the answer early in for loop iterations but it generally floats around O(logn) by +- < 1.
+    My program will print out both the iteration of the for loop as well as the log2(n) value so you can easily see that their
+    iteration rate is relatively the same. Another reason it is O(logn) is because it splits the array every time but I prefer
+    the math reason over the splitting reason.
+        See: void timeForDumb(); for more information on my string generation
+
+void deepest_substring(const char str[], char out[]);
+    I just copied a program I made in python in the past. Just iterate through the string until you find ( and add 1 to counter,
+    if you find a ) then reduce by 1 and keep track of the largest number. This is a lot simpler then the one I had to do before
+    since there were far more complex things needing to be done like changing the order of operations but it needed the same
+    premises as the order still somewhat took in to account parentheses as an important step.
+    Once you have the highest number for the parentheses you then go through it again and find the where the parentheses numbers
+    match up and continue adding all characters afterwards until you meet a ) bracket where you break because everything is 
+    useless after that. It also prints the string to show it found the correct inner parentheses.
+    
+void printS(char str[], int n);
+    Prints strings. Nothing special printS just stands for printStrings
+    
+char isCharUpper(char x, char y);
+    Just checks whether the two variables sent are capitals, left most variable taking priority.
+    This is jst for char first_capital(const char str[], int n); and I also strung a couple of these together to deal with 3
+    chars in one line.
+
+int randRange(int x, int y);
+    The rand() method is annoying so I made one closer to pythons randrange method in that you give it a range and it spits
+    back that range. It still just uses rand() but I like it a little more then just ordinary rand().
+    
+void timeForDumb();
+    I'm dumb and do stupid things like this. Maybe if I hadn't been screwing around on the previous assignment I would have
+    realized I had the wrong due date in my head. This function just produces test cases for me to test. It generates a
+    random number between 5 and maxLengthStrings (5 is just so that I am have a bit of safety and that it generates at least
+    1 upper and 1 lower to compensate I have some already written tests which test single letters.)
+    This function then generates another random number between 1 and 1 less then the length of the function where it will 
+    split the lower and upper case letters. It then goes to work generating random letters and will save the first 
+    UpperCase to be generated where, once completed will assert that my first_capital(const char str[], int n); function
+    does indeed find the first UpperCase letter in the string.
+        See: first_capital(const char str[], int n); for more information on my search algorithm
+    
+void first_capitalAsserts();
+    Deals with the first_capital asserts.
+
+void check_winAsserts();
+    Deals with the check_win asserts.
+
+void deepest_substringAssert();
+    Deals with the deepest_substring asserts.
+
+bool assertStrings(const char arr[], const char arrCompare[]);
+    Asserts strings because they're a pain to assert normally. So instead I just check to make sure that each letter is equal
+    to the other. I don't want to use strcmp() it annoyed me in Comp-1400 so now I only use it rarely. Ignore the fact I use
+    it in my void secretRules(int *player1, int *player2, int *infinite); Function.
+    
+void makeBoard(char board[6][7]);
+    Makes me a board. Nothing special.
+    
+void show(char brd[6][7]);
+    Renders the board inside the console. Kind of sad this isn't python or I would have used tkinter to render an actual board.
+    I don't know C enough to do anything remotely close to pythons tkinter or pygame.
+    
+bool placePiece(char board[6][7], int row, int column, char player);
+    Places each piece by checking whether or not a '.' exists in the current location. If it does it will continue down by 1
+    row where it will recursively check again. Once it matches that infact a '.' is not here it well then return true and
+    unravel 1 stack where it will then say yes, I got a true location here so place the player piece here. It well then
+    continue along its way until it gets back to bool make_move(char board[6][7], int column, char player);.
+        See: bool make_move(char board[6][7], int column, char player); for more information on how I determine move is valid in the first place
+        
+int checkDiagonals(char brd[6][7], char piece, int position[2], int direction[2], int move);
+    Bad name for this but I am not going to change it. Basically it will be given a board, some coordinates, a piece 
+    (piece refers to the players object ie X or O) and the current move it is on (move refers to distance away from
+    reference coordinate) by bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]);. 
+    This function will make a new coordinate from the current reference coordinate and the directional
+    coordinate which is just a directional vector in the direction I want checked and the after it checks this coordinate will
+    then call for checkDiagonals(char brd[6][7], char piece, int position[2], int direction[2], int move); again and change
+    the position coordinate with the new coordinate and increase move by 1. Once move hits 3 the function will unravel counting
+    all the team pieces it managed to hit. It will also unravel if you hit a piece not of your team.
+        See: bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]); for more information on how the coordinates are found.
+        
+bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]);
+    I have some diagrams at the top. They for visual help.
+    Checks the win conditions for the game. Better name then check_win since it's somewhat vague. What win? why are we checking win.
+    It kind of sound like you are just asking if a switch called win has been flipped not whether or not someone have met the conditions of victory.
+    checkWinConditions says more by stating we are going to check the win conditions and it follows camelCase which is what I have been
+    using recently so I prefer to use it. Anyways this function holds an array of all adjacent moves for each piece on the board for which to
+    check if they're the same piece as what is being checked against. to do this it first iterates through a list of directional vector which will
+    be used one at a time to create a direction to check and then sent to 
+    checkDiagonals(char brd[6][7], char piece, int position[2], int direction[2], int move); to see how far the line can go.
+    It will then return how many in that direction share the same piece. after this is completed, the 8 directions are split into 4 groups
+    opposites together and added together + 1 for the free center. This allows for me complete the same loop in half the iterations cheating
+    the O-notation a little despite speed efficiency not really increasing at all as only 12 iterations take place instead of 16.
+    Now for the *ai and the aiArr[2], these are for my ai and they also represent my annoyance at C for not allowing me to make
+    parameters = something ie ai=NULL or something like that so that I can get away without sending something through like in python.
+    Gah python is so accommodating sometimes. I also find it annoying I also can't return variable1, variable2 like in python but thats only
+    a small annoyance. But the first issue has cause me to have to create ghost variables in my program which just take up space. Now I know
+    C can allow you in some way to pass as many variables as you want but I currently don't know how to do that. I know it can be done
+    because printf for one allows it. Anyways the *ai is meant to start a process if it is sent as 1 where it will get a close and personal
+    check if this move was a winner or if it just got closer to winning. *ai then returns with the largest connection this move managed to make.
+    It will also check if victory occurred and if so send back a victory like normal. this extra stuff only activates from the
+    int AIBrains(char brd[6][7], char player, int opponentCheck); function which uses this to check both the AIs' move as well as its opponents
+    next most likely move and attempt to act accordingly with a slightly more well informed decision. aiArr[2] just carries the coordinates
+    I want exclusively tested. There are better ways to do this but I forgot my own brains when coding this so I am not fixing it.
+    Side Note: Yes it was necessary to call those iteration variable a pickle.
+        See: checkDiagonals(char brd[6][7], char piece, int position[2], int direction[2], int move); for more information on how it finds connected pieces.
+        See: AIBrains(char brd[6][7], char player, int opponentCheck); for more information on the AI behind my embarrassing defeat.
+    
+void newBoard(char referenceBoard[6][7], char copyBoard[6][7]);
+    Makes a newboard. Bad name because it actually copy pastes a new board from a reference board. Needed for my AI since it needs a board
+    to practice its moves on so it can make informed decisions Unlike me who managed to lose to my own AI because I wasn't even paying
+    attention to what it did.
+    If you know python think of it as the deepcopy function in the copy library.
+
+int findRow(char brd[6][7], char piece, int column);
+    Finds the row in which the piece I just let lose is located. I dunno there are better ways to do this probably but C is annoying
+    so I am not going to find them.
+    
+int AIBrains(char brd[6][7], char player, int opponentCheck);
+    The crowned jewel of my embarrassing moments, getting beaten by a bad AI because I was thinking up clever ways to beat it
+    forgetting the ai really likes to stack its pieces up on top of each other.
+    This does some simple calculations where it tries every move possible to make which is 49 different moves. 7 moves that
+    the ai can make followed by the 7 moves the opponent can possibly make to counter the ai. It uses a sort of Q learning
+    algorithm to calculate an abstract amount of points to weight this move against the others. Highest point count of the
+    7 base moves will be chosen with a tie of any number being randomly chosen from. This is to prevent something like the
+    ai only playing in the left corner only moving away if it fills up or needs to stop the opponent from getting too far
+    ahead.
+    Score System:
+        If The move in question is a valid move + 1 point, if not -1000 <- to prevent the ai from thinking bad move is better then alternatives.
+        If the move in question can win the game +100, Highest amount of points that can be awarded since it wins the game.
+            in fact this will just immediately stop the Brain from thinking and return the result.
+        If the move can connect some pieces together then it gains 5 * the connection length in points to Reward good moves
+        The same system up to now will be used on the opponent but the points will be slightly muted this is then sent as a negative to the ai
+            as punishment for allowing the enemy to have these moves. Basically if the opponent could win if this move is made then don't make this
+            move.
+        whichever of the 7 moves has the highest point count is chosen or if tie randomly chosen from them.
+    This AI usually works flawlessly for what it is supposed to be able to do but it will still occasionally fail.
+    (This is not Q learning as no learning goes on. It just uses a similar ish system to it by rewarding the ai for making
+    a good move and punishing it for making a bad move. The System I am using I believe is what chess AI uses chess AI uses it to a higher scale)
+    It can only see its own 7 moves and the opponents 7 possible counters to each of the 7 moves. 
+    See: bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]); for more information on what gets checked when it comes to connecting pieces.
+    
+void leAIMakeAMove(char board[6][7], char player, char message[]);
+    figures out optimal moves for the AI to make. I added a clock to make it seem like the ai is really trying to beat you since it takes
+    so long for the ai to think which move is best. 
+    See: AIBrains(char brd[6][7], char player, int opponentCheck); for more information on how the ai decides what is the optimal move to make
+    
+bool leMakeAMove(char board[6][7], char player, char message[]);
+    controls the moves a human player can make. Makes sure all moves are legal moves and that the player is playing by the rules.
+    
+void secretRules(int *player1, int *player2, int *infinity);
+    These are secret rules So I can't talk about them.
+    
+bool doesGameStillHaveSpace(char brd[6][7]);
+    Checks if the board still have space to continue playing. Just bothers to check the 0th row as if it doesn't have any space, then nothing does.
+    
+void gameMaster(char brd[6][7]);
+    The gameMaster is the game master which organizes the game and all functions associated with connect 4.
+        Don't See: void secretRules(int *player1, int *player2, int *infinity); for more information on the secret Rules.
+        See: bool leMakeAMove(char board[6][7], char player, char message[]); for more information on how the player chooses their move.
+        See: void leAIMakeAMove(char board[6][7], char player, char message[]); for more information on how the AI chooses their move.
+        See: show(gameBoard); for more information on how the board is rendered.
+        See: bool checkWinConditions(char brd[6][7], char matchPiece, int *ai, int aiArr[2]); for more information on how the program checks win conditions.
+        See: bool doesGameStillHaveSpace(char brd[6][7]); for more information on how the game determines if space still remains on the board.
